@@ -15,9 +15,11 @@ public class PlayerController : MonoBehaviour
    public float speed;				
    public Text countText;
    public Text winText;
+   public Text livesText;
 
    private Rigidbody2D rb2d;
    private int count;
+   private int lives;
 
    void Start()
 	
@@ -26,11 +28,13 @@ public class PlayerController : MonoBehaviour
    
    rb2d = GetComponent<Rigidbody2D> ();
    count = 0;
+   lives = 3;
 
    winText.text = "";
 
 		
    SetCountText ();
+   SetLivesText ();  
 	
 }
 
@@ -58,26 +62,22 @@ public class PlayerController : MonoBehaviour
 
 	
 	
-   void OnTriggerEnter2D(Collider2D other) 
-	
-   {
-		
-	if (other.gameObject.CompareTag ("PickUp"))
- 
-	{
-			
+private void OnTriggerEnter2D(Collider2D other)
+{
+     if (other.gameObject.CompareTag("PickUp"))
+     {
+          other.gameObject.SetActive(false);
+          count = count + 1; 
+          SetCountText();
+     }
+     else if (other.gameObject.CompareTag("Enemy"))
+     {
+          other.gameObject.SetActive(false);
+          count = count - 1;  
+          SetCountText();
+     }
+} 
 
-	   other.gameObject.SetActive(false);
-	   count = count + 1;
-
-	    SetCountText ();
-
-
-	}
-
-   }
-
-	
 	void SetCountText()
 
 	{
@@ -86,11 +86,19 @@ public class PlayerController : MonoBehaviour
 	   countText.text = "Count: " + count.ToString ();
 
 
-		if (count >= 12)
+		if (count == 12)
 			
-		winText.text = "You win! Game created by Alec Nicholson!";
+		transform.position = new Vector2(50.0f, 50.0f);
+		if (count >= 20)
+		winText.text = "You Win! Game Created by Alec Nicholson";
+		
+
 	
 	}
-	
+
+	void SetLivesText()
+	{
+	   livesText.text = "Lives: " + lives.ToString ();
+	}
 
 }
